@@ -8,14 +8,14 @@
 		<version>2.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>io.boot</groupId>
-	<artifactId>corona-tracker</artifactId>
+	<groupId>io.corona.tracker</groupId>
+	<artifactId>io.boot.coronatracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>corona-tracker</name>
+	<name>io.boot.coronatracker</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>12</java.version>
+		<java.version>15</java.version>
 	</properties>
 
 	<dependencies>
@@ -45,6 +45,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
 		<dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-csv</artifactId>
