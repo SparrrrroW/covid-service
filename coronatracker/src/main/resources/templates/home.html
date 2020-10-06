@@ -14,10 +14,12 @@
 	<br>
 	
 	<div class="jumbotron">
-  <h1 class="display-4" th:text="${totalCases}"></h1>
+  <h1 class="display-4 text-info" th:text="${totalCases}"></h1>
   <p class="lead">THIS NUMBER SHOWS TOTAL COVID-19 CASES ALL AROUND THE GLOBE, SOME COUNTRIES HAVE STATE-WISE DATA SOME DON'T</p>
 	<hr>
-	<p class="lead">New Cases as of previous day : <span th:text="${totalCases} - ${prevTotal}"></span> </p>
+	<p class="lead">New Cases as of previous day : <span class="text-warning" th:text="${totalCases} - ${prevTotal}"></span> </p>
+	<p class="lead">Total Deaths : <span class="text-danger" th:text="${deaths}"></span> </p>
+	<p class="lead">Total Recoveries : <span class="text-success" th:text="${recovers}"></span> </p>
 </div>
   
     <table class="table table-striped">

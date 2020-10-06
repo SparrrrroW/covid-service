@@ -29,9 +29,13 @@ public class CoronaController {
 		for (CoronaObject object : aDayBeforeList) {
 			prevTotal = prevTotal + object.getLatestTotalCases();
 		}
+		int deaths = service.getDeaths();
+		int recovers = service.getRecovers();
 		mv.addObject("locationStats", locationStats);
 		mv.addObject("totalCases", total);
 		mv.addObject("prevTotal", prevTotal);
+		mv.addObject("deaths", deaths);
+		mv.addObject("recovers", recovers);
 		mv.setViewName("home");
 		return mv;
 	}

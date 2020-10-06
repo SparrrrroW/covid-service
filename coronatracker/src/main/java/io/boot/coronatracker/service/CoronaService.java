@@ -22,23 +22,42 @@ import io.boot.coronatracker.bean.CoronaObject;
 public class CoronaService {
 	
 	private static String virusDataUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-
+	private static String virusRecoveredUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+	private static String virusDeathUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	private int deaths;
+	private int recovers;
+	
 	private List<CoronaObject> totalCasesList = new ArrayList<>();
 	private List<CoronaObject> aDayBeforeTotalList = new ArrayList<>();
 	// This method will be executed as soon as instance is created
+	
+	
 	@PostConstruct
 	@Scheduled(cron = "* * 1 * * *")
 	public void getCoronaDetails() throws IOException, InterruptedException {
 		HttpClient client = HttpClient.newHttpClient();
+		
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(virusDataUrl)).build();
+		
+		HttpRequest requestDeaths = HttpRequest.newBuilder().uri(URI.create(virusDeathUrl)).build();
+		
+		HttpRequest requestRecovers = HttpRequest.newBuilder().uri(URI.create(virusRecoveredUrl)).build();
 		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		System.out.println(response.body());
+		HttpResponse<String> responseDeaths = client.send(requestDeaths, HttpResponse.BodyHandlers.ofString());
 		
-StringReader reader = new StringReader(response.body());
+		HttpResponse<String> responseRecovers = client.send(requestRecovers, HttpResponse.BodyHandlers.ofString());
 		
-Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
+		//System.out.println(response.body());
+		
+		StringReader reader = new StringReader(response.body());
+		
+		StringReader readerDeaths = new StringReader(responseDeaths.body());
+		
+		StringReader readerRecovers = new StringReader(responseRecovers.body());
+		
+		Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
 		List<CoronaObject> currentList = new ArrayList<CoronaObject>();
 		List<CoronaObject> aDayBeforeList = new ArrayList<>();
 		for (CSVRecord record : records) {
@@ -58,6 +77,26 @@ Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(
 			
 		}
 		
+		Iterable<CSVRecord> recordsDeaths = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(readerDeaths);
+		
+		int dead = 0;
+		
+		for (CSVRecord record : recordsDeaths) {
+			 dead= dead + Integer.parseInt(record.get(record.size()-1));	
+		}
+		
+		this.deaths = dead;
+
+		Iterable<CSVRecord> recordsRecovers = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(readerRecovers);
+		
+		int rec = 0;
+		
+		for (CSVRecord record : recordsRecovers) {
+			rec = rec + Integer.parseInt(record.get(record.size()-1));
+		}
+		
+		this.recovers = rec;
+		
 		
 		this.aDayBeforeTotalList = aDayBeforeList;
 		this.totalCasesList = currentList;
@@ -65,6 +104,12 @@ Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(
 		System.out.println(aDayBeforeTotalList);
 		
 		reader.close();
+	}
+	public int getDeaths() {
+		return deaths;
+	}
+	public int getRecovers() {
+		return recovers;
 	}
 	public List<CoronaObject> getTotalCasesList() {
 		return totalCasesList;
