@@ -24,6 +24,7 @@ public class CoronaService {
 	private static String virusDataUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
 	private List<CoronaObject> totalCasesList = new ArrayList<>();
+	private List<CoronaObject> aDayBeforeTotalList = new ArrayList<>();
 	// This method will be executed as soon as instance is created
 	@PostConstruct
 	@Scheduled(cron = "* * 1 * * *")
@@ -33,12 +34,13 @@ public class CoronaService {
 		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		//System.out.println(response.body());
+		System.out.println(response.body());
 		
 StringReader reader = new StringReader(response.body());
 		
 Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
 		List<CoronaObject> currentList = new ArrayList<CoronaObject>();
+		List<CoronaObject> aDayBeforeList = new ArrayList<>();
 		for (CSVRecord record : records) {
 			CoronaObject object = new CoronaObject();
 			object.setState(record.get(0));
@@ -47,15 +49,28 @@ Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(
 			object.setLatestTotalCases(totalCases);
 //			System.out.println(object);
 			currentList.add(object);
+			CoronaObject object1 = new CoronaObject();
+			object1.setState(record.get(0));
+			object1.setCountry(record.get(1));
+			int totalCases1 = Integer.parseInt(record.get(record.size()-2));
+			object1.setLatestTotalCases(totalCases1);
+			aDayBeforeList.add(object1);
+			
 		}
 		
+		
+		this.aDayBeforeTotalList = aDayBeforeList;
 		this.totalCasesList = currentList;
-		System.out.println(totalCasesList);
+//		System.out.println(totalCasesList);
+		System.out.println(aDayBeforeTotalList);
 		
 		reader.close();
 	}
 	public List<CoronaObject> getTotalCasesList() {
 		return totalCasesList;
+	}
+	public List<CoronaObject> getaDayBeforeTotalList() {
+		return aDayBeforeTotalList;
 	}
 	
 }
