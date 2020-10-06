@@ -20,12 +20,18 @@ public class CoronaController {
 	public ModelAndView getHome() {
 		ModelAndView mv = new ModelAndView();
 		List<CoronaObject> locationStats = service.getTotalCasesList();
+		List<CoronaObject> aDayBeforeList = service.getaDayBeforeTotalList();
 		int total = 0;
 		for (CoronaObject object : locationStats) {
 			total = total+ object.getLatestTotalCases();
 		};
+		int prevTotal = 0;
+		for (CoronaObject object : aDayBeforeList) {
+			prevTotal = prevTotal + object.getLatestTotalCases();
+		}
 		mv.addObject("locationStats", locationStats);
 		mv.addObject("totalCases", total);
+		mv.addObject("prevTotal", prevTotal);
 		mv.setViewName("home");
 		return mv;
 	}
