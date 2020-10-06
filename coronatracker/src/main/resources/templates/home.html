@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<title>Covid-19 Stats</title>
+
+</head>
+<body class="container text-secondary bg-light">
+<br>
+	<center>
+	<h1>COVID-19 Stats</h1></center>
+	<br>
+	
+	<div class="jumbotron">
+  <h1 class="display-4" th:text="${totalCases}"></h1>
+  <p class="lead">THIS NUMBER SHOWS TOTAL COVID-19 CASES ALL AROUND THE GLOBE, SOME COUNTRIES HAVE STATE-WISE DATA SOME DON'T</p>
+</div>
+  
+    <table class="table table-striped">
+      <tr>
+        <th scope="col">Country</th>
+        <th scope="col">State</th>
+        <th scope="col">TotalCases</th>
+      </tr>
+      <tr th:each="prod : ${locationStats}">
+        
+        <td th:text="${prod.country}" scope="row"></td>
+        <td th:text="${prod.state}" scope="row"></td>
+        <td th:text="${prod.latestTotalCases}" scope="row"></td>
+      </tr>
+    </table>
+    
+</body>
+
+</html>
